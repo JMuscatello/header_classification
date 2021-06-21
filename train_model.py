@@ -46,23 +46,6 @@ def get_paragraphs_text_labels(html_file):
     return docs, labels
 
 
-def preprocess(text):
-    """
-    Preprocesses text to replace header numbers and indicate all caps by
-    appending a string
-
-    Args:
-        text (String): String to apply preprocessing to
-
-    Returns:
-        processed string
-    """
-    text = re.sub(r'[0-9]+(\.?)\s+(?=[A-Z].+)', 'NUM', text)
-    if text.isupper():
-        text + ' ALL_CAPS'
-    return text
-
-
 def main():
     parser = argparse.ArgumentParser(
         description='A script to train a header classifier using html data')
@@ -114,7 +97,6 @@ def main():
 
     params = {
         'tfidf__ngram_range': [(1, 1), (1, 2), (1, 3)],
-        'tfidf__preprocessor': [preprocess, None],
         'tfidf__stop_words': [None, 'english'],
         'tfidf__min_df': [1, 5],
         'lr__C': [0.1, 1.0, 10.0],
