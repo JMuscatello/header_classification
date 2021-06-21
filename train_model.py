@@ -20,7 +20,7 @@ from sklearn.linear_model import LogisticRegression
 
 def get_paragraphs_text_labels(html_file):
     """
-    Returns paragraph text and labels from html file, using beautiful soup
+    Returns processed text and labels from html file, using beautiful soup
 
     Args:
         html_file: string containing html
@@ -37,13 +37,30 @@ def get_paragraphs_text_labels(html_file):
     for p in soup.find_all('p'):
         text = p.get_text()
         if text.lower().islower():
-            docs.append(p.get_text())
+            docs.append(preprocess(p.get_text()))
             if 'background-color: orange' in p['style']:
                 labels.append(1)
             else:
                 labels.append(0)
 
     return docs, labels
+
+
+def preprocess(text):
+    """
+    Preprocesses text to replace header numbers and indicate all caps by
+    appending a string
+
+    Args:
+        text (String): String to apply preprocessing to
+
+    Returns:
+        processed string
+    """
+    text = re.sub(r'[0-9]+(\.?)\s+(?=[A-Z].+)', 'NUM', text)
+    if text.isupper():
+        text + ' ALL_CAPS'
+    return text
 
 
 def main():
